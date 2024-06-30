@@ -60,7 +60,7 @@ def load_and_preprocess_data (filepath):
     target = data['classification']  # y
 
     # Convert non-numeric placeholders to NaN
-    features.replace({'\t?': np.nan, '?': np.nan}, inplace=True)
+    features.replace({'\t?': np.nan, '?': np.nan, '-': np.nan}, inplace=True)
 
     # Define the preprocessing for numerical and categorical columns
     numerical_transformer = Pipeline(steps=[
