@@ -1,9 +1,9 @@
-
 import numpy as np
 import skfuzzy as fuzz
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+from PIL import Image
 
 
 from sklearn.model_selection import train_test_split, GridSearchCV
@@ -113,7 +113,6 @@ def predict_with_knn(model, new_data):
     return prediction, probability
 
 
-
 # Load and preprocess data
 file_path = 'dataset/kidney_disease.csv'
 features, target, preprocessor = load_and_preprocess_data(file_path)
@@ -150,6 +149,7 @@ potassium = ctrl.Antecedent(np.arange(2, 7, 0.1), 'potassium')
 
 # Output severity
 severity = ctrl.Consequent(np.arange(0, 1.1, 0.1), 'severity')
+
 
 # Membership functions for GFR
 # Stage 1: eGFR > 90 mL/min/1.73 m²
@@ -201,112 +201,84 @@ bun['very high'] = fuzz.trapmf(bun.universe, [60, 80, 100, 100])
 # # https://athenslab.gr/en/diagnostikes-exetaseis/blood-urea-nitrogen-13
 
 
-# # Membership functions for Albuminuria (nominal data)
-albuminuria['normal'] = fuzz.trimf(albuminuria.universe, [0, 0, 1])
-albuminuria['trace'] = fuzz.trimf(albuminuria.universe, [0, 1, 2])
-albuminuria['low'] = fuzz.trimf(albuminuria.universe, [1, 2, 3])
-albuminuria['medium'] = fuzz.trimf(albuminuria.universe, [2, 3, 4])
-albuminuria['high'] = fuzz.trimf(albuminuria.universe, [3, 4, 5])
-albuminuria['very high'] = fuzz.trimf(albuminuria.universe, [4, 5, 5])
+# Membership functions for Albuminuria (nominal data)
+albuminuria['normal'] = fuzz.trimf(albuminuria.universe, [0, 0, 1])         # < 30 mg/g
+albuminuria['trace'] = fuzz.trimf(albuminuria.universe, [0, 1, 2])          # 30 - 300 mg/g
+albuminuria['low'] = fuzz.trimf(albuminuria.universe, [1, 2, 3])            # 300 - 1000 mg/g
+albuminuria['medium'] = fuzz.trimf(albuminuria.universe, [2, 3, 4])         # 1000 - 3000 mg/g
+albuminuria['high'] = fuzz.trimf(albuminuria.universe, [3, 4, 5])           # > 3000 mg/g
+albuminuria['very high'] = fuzz.trimf(albuminuria.universe, [4, 5, 5])      # > 3000 mg/g
 
 
-# # Membership functions for Blood Pressure
-bp['normal'] = fuzz.trapmf(bp.universe, [50, 50, 90, 120])
-bp['high'] = fuzz.trimf(bp.universe, [90, 120, 180])
-bp['very_high'] = fuzz.trapmf(bp.universe, [120, 180, 200, 200])
+# Membership functions for Blood Pressure
+bp['normal'] = fuzz.trapmf(bp.universe, [50, 50, 90, 135])     # < 120/80 mmHg
+bp['high'] = fuzz.trimf(bp.universe, [105, 130, 155])          # 120/80 - 139/89 mmHg
+bp['very_high'] = fuzz.trapmf(bp.universe, [125, 160, 200, 200]) # ≥ 140/90 mmHg
 
-# # Membership functions for Hemoglobin
-hemoglobin['low'] = fuzz.trapmf(hemoglobin.universe, [5, 5, 10, 12])
-hemoglobin['normal'] = fuzz.trimf(hemoglobin.universe, [10, 12, 16])
-hemoglobin['high'] = fuzz.trapmf(hemoglobin.universe, [12, 16, 20, 20])
 
-# # Membership functions for Sodium
-sodium['low'] = fuzz.trapmf(sodium.universe, [120, 120, 135, 138])
-sodium['normal'] = fuzz.trimf(sodium.universe, [135, 138, 145])
-sodium['high'] = fuzz.trapmf(sodium.universe, [138, 145, 150, 150])
+# Membership functions for Hemoglobin
+hemoglobin['low'] = fuzz.trapmf(hemoglobin.universe, [5, 5, 10, 13])       # < 12 g/dL for women, < 13 g/dL for men
+hemoglobin['normal'] = fuzz.trimf(hemoglobin.universe, [11, 13.75, 16.5])  # 12 - 15.5 g/dL for women, 13 - 17.5 g/dL for men
+hemoglobin['high'] = fuzz.trapmf(hemoglobin.universe, [14.5, 17, 20, 20])  # > 15.5 g/dL for women, > 17.5 g/dL for men
 
-# # Membership functions for Potassium
-potassium['low'] = fuzz.trapmf(potassium.universe, [2, 2, 3.5, 4])
-potassium['normal'] = fuzz.trimf(potassium.universe, [3.5, 4, 5.5])
-potassium['high'] = fuzz.trapmf(potassium.universe, [4, 5.5, 7, 7])
+
+# Membership functions for Sodium
+sodium['low'] = fuzz.trapmf(sodium.universe, [120, 120, 132.5, 137])   # < 135 mEq/L
+sodium['normal'] = fuzz.trimf(sodium.universe, [133, 140, 147])        # 135 - 145 mEq/L
+sodium['high'] = fuzz.trapmf(sodium.universe, [145, 145.5, 150, 150])  # > 145 mEq/L
+
+
+# Membership functions for Potassium
+potassium['low'] = fuzz.trapmf(potassium.universe, [2, 2, 3.25, 5])    # < 3.5 mEq/L
+potassium['normal'] = fuzz.trimf(potassium.universe, [3, 4.25, 5.5])     # 3.5 - 5.0 mEq/L
+potassium['high'] = fuzz.trapmf(potassium.universe, [4.5, 5.25, 7, 7])     # > 5.0 mEq/L
+
 
 # # Membership functions for Severity
 severity['low'] = fuzz.trimf(severity.universe, [0, 0, 0.5])
 severity['medium'] = fuzz.trimf(severity.universe, [0, 0.5, 1])
 severity['high'] = fuzz.trimf(severity.universe, [0.5, 1, 1])
 
-# # Define fuzzy rules for CKD severity
-# rule1 = ctrl.Rule(creatinine['high'] & bun['high'] & albuminuria['high'], severity['high'])
-# rule2 = ctrl.Rule(creatinine['medium'] & bun['medium'] & albuminuria['medium'], severity['medium'])
-# rule3 = ctrl.Rule(creatinine['low'] & bun['low'] & albuminuria['low'], severity['low'])
-# # Add more rules as necessary
+
+# Define fuzzy rules for CKD severity
+rule1 = ctrl.Rule(gfr['stage 5'] | creatinine['high'] | bun['very high'] | albuminuria['very high'] | 
+                  bp['very_high'] | hemoglobin['low'] | sodium['low'] | potassium['high'], severity['high'])
+
+rule2 = ctrl.Rule((gfr['stage 3'] | gfr['stage 4']) & (creatinine['medium'] | bun['medium'] | albuminuria['medium'] | 
+                  bp['high'] | hemoglobin['normal'] | sodium['normal'] | potassium['normal']), severity['medium'])
+
+rule3 = ctrl.Rule((gfr['stage 1'] | gfr['stage 2']) & (creatinine['low'] | creatinine['normal']) & 
+                  (bun['low'] | albuminuria['low'] | albuminuria['normal']) & bp['normal'] & 
+                  (hemoglobin['normal'] | hemoglobin['high']) & sodium['normal'] & 
+                  (potassium['low'] | potassium['normal']), severity['low'])
+
+# Create a control system based on the rules
+ckd_ctrl = ctrl.ControlSystem([rule1, rule2, rule3])
+ckd_simulation = ctrl.ControlSystemSimulation(ckd_ctrl)
 
 
-# # Create the control system and simulation
-# severity_ctrl = ctrl.ControlSystem([rule1, rule2, rule3])
-# severity_simulation = ctrl.ControlSystemSimulation(severity_ctrl)
+# Input values for the simulation (corresponding to "low" severity)
+ckd_simulation.input['gfr'] = 65  # Example: Stage 2
+ckd_simulation.input['creatinine'] = 1.0  # Example: Normal
+ckd_simulation.input['bun'] = 15  # Example: Low
+ckd_simulation.input['albuminuria'] = 1  # Example: Normal
+ckd_simulation.input['bp'] = 120  # Example: Normal
+ckd_simulation.input['hemoglobin'] = 14  # Example: Normal
+ckd_simulation.input['sodium'] = 140  # Example: Normal
+ckd_simulation.input['potassium'] = 4  # Example: Normal
 
+# Compute the result
+ckd_simulation.compute()
 
-# def analyze_severity_with_fuzzy(new_data, knn_model):
+# Print the severity level
+print(f"Severity level: {ckd_simulation.output['severity']:.2f}")
 
-#     #add new gfr, bun column for analysis
-#     new_data['gfr'] = new_data.apply(calculate_gfr, axis=1)
-#     new_data['bun'] = new_data.apply(calculate_bun, axis=1)
-    
-#     # Predict with KNN model
-#     prediction, probability = predict_with_knn(knn_model, new_data)
+# Visualize the severity graph
+severity.view(sim=ckd_simulation)
 
-#     # Fuzzy analysis for severity
-#     # severity_simulation.input['gfr'] = new_data['gfr'].values[0]
-#     severity_simulation.input['creatinine'] = new_data['sc'].values[0]
-#     severity_simulation.input['bun'] = new_data['bu'].values[0]
-#     severity_simulation.input['albuminuria'] = new_data['al'].values[0]
-#     # severity_simulation.input['bp'] = new_data['bp'].values[0]
-#     # severity_simulation.input['hemoglobin'] = new_data['hemo'].values[0]
-#     # severity_simulation.input['sodium'] = new_data['sod'].values[0]
-#     # severity_simulation.input['potassium'] = new_data['pot'].values[0]
+# Save the severity graph to a file
+plt.savefig('severity_graph.png')
+print("Severity graph saved as 'severity_graph.png'")
 
-#     # Compute the fuzzy output
-#     severity_simulation.compute()
-#     severity_result = severity_simulation.output['severity']
-
-#     return prediction, probability, severity_result
-
-
-
-# new_data = pd.DataFrame({
-#     'age': [48],
-#     'bp': [80],
-#     'sg': [1.02],
-#     'al': [0],
-#     'su': [0],
-#     'bgr': [121],
-#     'bu': [36],
-#     'sc': [1],
-#     'sod': [137],
-#     'pot': [4.4],
-#     'hemo': [15.4],
-#     'pcv': [44],
-#     'wc': [7800],
-#     'rc': [5.2],
-#     'rbc': ['normal'],
-#     'pc': ['normal'],
-#     'pcc': ['notpresent'],
-#     'ba': ['notpresent'],
-#     'htn': ['yes'],
-#     'dm': ['no'],
-#     'cad': ['no'],
-#     'appet': ['good'],
-#     'pe': ['no'],
-#     'ane': ['no'], 
-# })
-
-# # prediction, probability = predict_with_knn(knn_best, new_data)
-# # print(f'Prediction: {prediction}')
-# # print(f'Probability: {probability}')
-
-
-# prediction, probability, severity = analyze_severity_with_fuzzy(new_data, knn_best)
-# print(f'Prediction: {prediction}')
-# print(f'Probability: {probability}')
-# print(f'Severity: {severity}')
+image = Image.open('severity_graph.png')
+image.show()
