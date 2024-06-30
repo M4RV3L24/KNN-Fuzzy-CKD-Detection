@@ -141,8 +141,8 @@ print(f'Predicted Labels: {y_pred}')
 # Define the universe of discourse for each clinical parameter
 gfr = ctrl.Antecedent(np.arange(0, 150, 1), 'gfr')
 creatinine = ctrl.Antecedent(np.arange(0, 4, 0.1), 'creatinine')
-bun = ctrl.Antecedent(np.arange(0, 200, 1), 'bun')
-albuminuria = ctrl.Antecedent(np.arange(0, 10, 0.1), 'albuminuria')
+bun = ctrl.Antecedent(np.arange(0, 100, 1), 'bun')
+albuminuria = ctrl.Antecedent(np.arange(0, 6, 1), 'albuminuria')
 bp = ctrl.Antecedent(np.arange(50, 200, 1), 'bp')
 hemoglobin = ctrl.Antecedent(np.arange(5, 20, 0.1), 'hemoglobin')
 sodium = ctrl.Antecedent(np.arange(120, 150, 0.1), 'sodium')
@@ -186,7 +186,7 @@ creatinine['high'] = fuzz.trapmf(creatinine.universe, [2.0, 3.0, 5.0, 5.0])
 # Membership functions for BUN
 bun["very low"] = fuzz.trapmf(bun.universe, [0, 0, 4, 10])
 
-# Normal BUN levels (approximate range)
+# Normal BUN levels (approximate range) 7-20 mg/dl
 bun['low'] = fuzz.trimf(bun.universe, [5, 15, 25])
 
 # Mildly elevated BUN levels
@@ -201,35 +201,39 @@ bun['very high'] = fuzz.trapmf(bun.universe, [60, 80, 100, 100])
 # # https://athenslab.gr/en/diagnostikes-exetaseis/blood-urea-nitrogen-13
 
 
-# # Membership functions for Albuminuria
-# albuminuria['low'] = fuzz.trapmf(albuminuria.universe, [0, 0, 0.3, 1])
-# albuminuria['medium'] = fuzz.trimf(albuminuria.universe, [0.3, 1, 3])
-# albuminuria['high'] = fuzz.trapmf(albuminuria.universe, [1, 3, 10, 10])
+# # Membership functions for Albuminuria (nominal data)
+albuminuria['normal'] = fuzz.trimf(albuminuria.universe, [0, 0, 1])
+albuminuria['trace'] = fuzz.trimf(albuminuria.universe, [0, 1, 2])
+albuminuria['low'] = fuzz.trimf(albuminuria.universe, [1, 2, 3])
+albuminuria['medium'] = fuzz.trimf(albuminuria.universe, [2, 3, 4])
+albuminuria['high'] = fuzz.trimf(albuminuria.universe, [3, 4, 5])
+albuminuria['very high'] = fuzz.trimf(albuminuria.universe, [4, 5, 5])
+
 
 # # Membership functions for Blood Pressure
-# bp['normal'] = fuzz.trapmf(bp.universe, [50, 50, 90, 120])
-# bp['high'] = fuzz.trimf(bp.universe, [90, 120, 180])
-# bp['very_high'] = fuzz.trapmf(bp.universe, [120, 180, 200, 200])
+bp['normal'] = fuzz.trapmf(bp.universe, [50, 50, 90, 120])
+bp['high'] = fuzz.trimf(bp.universe, [90, 120, 180])
+bp['very_high'] = fuzz.trapmf(bp.universe, [120, 180, 200, 200])
 
 # # Membership functions for Hemoglobin
-# hemoglobin['low'] = fuzz.trapmf(hemoglobin.universe, [5, 5, 10, 12])
-# hemoglobin['normal'] = fuzz.trimf(hemoglobin.universe, [10, 12, 16])
-# hemoglobin['high'] = fuzz.trapmf(hemoglobin.universe, [12, 16, 20, 20])
+hemoglobin['low'] = fuzz.trapmf(hemoglobin.universe, [5, 5, 10, 12])
+hemoglobin['normal'] = fuzz.trimf(hemoglobin.universe, [10, 12, 16])
+hemoglobin['high'] = fuzz.trapmf(hemoglobin.universe, [12, 16, 20, 20])
 
 # # Membership functions for Sodium
-# sodium['low'] = fuzz.trapmf(sodium.universe, [120, 120, 135, 138])
-# sodium['normal'] = fuzz.trimf(sodium.universe, [135, 138, 145])
-# sodium['high'] = fuzz.trapmf(sodium.universe, [138, 145, 150, 150])
+sodium['low'] = fuzz.trapmf(sodium.universe, [120, 120, 135, 138])
+sodium['normal'] = fuzz.trimf(sodium.universe, [135, 138, 145])
+sodium['high'] = fuzz.trapmf(sodium.universe, [138, 145, 150, 150])
 
 # # Membership functions for Potassium
-# potassium['low'] = fuzz.trapmf(potassium.universe, [2, 2, 3.5, 4])
-# potassium['normal'] = fuzz.trimf(potassium.universe, [3.5, 4, 5.5])
-# potassium['high'] = fuzz.trapmf(potassium.universe, [4, 5.5, 7, 7])
+potassium['low'] = fuzz.trapmf(potassium.universe, [2, 2, 3.5, 4])
+potassium['normal'] = fuzz.trimf(potassium.universe, [3.5, 4, 5.5])
+potassium['high'] = fuzz.trapmf(potassium.universe, [4, 5.5, 7, 7])
 
 # # Membership functions for Severity
-# severity['low'] = fuzz.trimf(severity.universe, [0, 0, 0.5])
-# severity['medium'] = fuzz.trimf(severity.universe, [0, 0.5, 1])
-# severity['high'] = fuzz.trimf(severity.universe, [0.5, 1, 1])
+severity['low'] = fuzz.trimf(severity.universe, [0, 0, 0.5])
+severity['medium'] = fuzz.trimf(severity.universe, [0, 0.5, 1])
+severity['high'] = fuzz.trimf(severity.universe, [0.5, 1, 1])
 
 # # Define fuzzy rules for CKD severity
 # rule1 = ctrl.Rule(creatinine['high'] & bun['high'] & albuminuria['high'], severity['high'])
