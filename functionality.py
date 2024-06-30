@@ -16,6 +16,14 @@ from sklearn.pipeline import Pipeline
 
 from skfuzzy import control as ctrl
 
+# Calculate GFR using MDRD formula
+def calculate_gfr(row):
+    scr = row['sc']
+    age = row['age']
+    gfr = 175 * (scr ** -1.154) * (age ** -0.203)
+    return gfr
+
+
 def load_and_preprocess_data (filepath):
 
         # Load dataset
@@ -33,8 +41,10 @@ def load_and_preprocess_data (filepath):
 
     for col in categorical_cols:
         data[col] = data[col].str.strip()
-    
 
+    data['gfr'] = data.apply(calculate_gfr, axis=1)
+    numerical_cols.append('gfr')
+    
     # Select features and target
     features = data.drop(columns=['id', 'classification'])  # X
     target = data['classification']  # y
@@ -88,6 +98,7 @@ def train_knn_model(x_train, y_train, preprocessor):
 
 def predict_with_knn(model, new_data):
     #use model for make prediction
+    new_data['gfr'] = new_data.apply(calculate_gfr, axis=1)
     prediction = model.predict(new_data)
     probability = model.predict_proba(new_data)
     return prediction, probability
@@ -113,7 +124,7 @@ y_pred_probabilities = knn_best.predict_proba(x_test)
 print(f'Best parameters: {best_params}')
 print(f'Accuracy: {accuracy}')
 print(f'Predicted Labels: {y_pred}')
-print(f'Predicted Probabilities: {y_pred_probabilities}')
+# print(f'Predicted Probabilities: {y_pred_probabilities}')
 # Predict with new data
 new_data = pd.DataFrame({
     'age': [48],
@@ -123,7 +134,7 @@ new_data = pd.DataFrame({
     'su': [0],
     'bgr': [121],
     'bu': [36],
-    'sc': [2],
+    'sc': [1],
     'sod': [137],
     'pot': [4.4],
     'hemo': [15.4],
@@ -139,7 +150,7 @@ new_data = pd.DataFrame({
     'cad': ['no'],
     'appet': ['good'],
     'pe': ['no'],
-    'ane': ['no']
+    'ane': ['no'], 
 })
 
 prediction, probability = predict_with_knn(knn_best, new_data)
