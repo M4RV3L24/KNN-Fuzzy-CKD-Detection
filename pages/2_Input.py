@@ -3,8 +3,14 @@ import functionality
 import pandas as pd
 import numpy as np
 
-st.header("Patient's Data")
+st.markdown("""
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    """, unsafe_allow_html=True)
 
+
+st.markdown("""
+    <h1 style='text-align: center; color: black;'>👤Patient's Data </h1>
+    """, unsafe_allow_html=True)
 patient_form = st.form('new_input')
 
 with patient_form:

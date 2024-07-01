@@ -4,6 +4,9 @@ import pandas as pd
 import numpy as np
 
 
+st.markdown("""
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    """, unsafe_allow_html=True)
 
 def unauthenticated_menu():
     # Show a navigation menu for unauthenticated users
@@ -23,7 +26,12 @@ def display_table(dataframe, page, items_per_page):
     return dataframe[start_idx:end_idx]
     
 
-st.title("Chronic Kidney Disease Analyzer")
+st.markdown("""
+    <h1 style='text-align:  center; color: black;'>Chronic Kidney Disease Analyzer </h1>
+    """, unsafe_allow_html=True)
+
+
+st.markdown('<i class="fa fa-info-circle"></i> Informasi penting tentang CKD', unsafe_allow_html=True)
 
 section1, section2 = st.columns(2)
 section1_exp = section1.expander("Expand")

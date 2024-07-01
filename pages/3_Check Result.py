@@ -5,8 +5,17 @@ import numpy as np
 import os
 import joblib
 
+# Menambahkan CSS untuk FontAwesome
+st.markdown("""
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    """, unsafe_allow_html=True)
+
+
 # st.header("Patient's Diagnosis")
-st.subheader("+ Patient's Data")
+st.markdown("""
+    <h2 style='text-align: center; color: black;'>👤Patient's Data </h1>
+    """, unsafe_allow_html=True)
+
 
 age = st.sidebar.expander("Age (age)")
 age.write("The age of the patient in years.")
@@ -67,7 +76,10 @@ else:
 
 st.table(data)
 
-st.subheader("+ Prediction")
+st.markdown("""
+    <h2 style='text-align: center; color: black;'>📊 Prediction </h1>
+    """, unsafe_allow_html=True)
+
 # Define the paths for the model and parameters
 model_path = 'knn_best_model.pkl'
 params_path = 'knn_best_params.pkl'

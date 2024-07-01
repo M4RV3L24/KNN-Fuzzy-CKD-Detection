@@ -1,18 +1,23 @@
 import streamlit as st
 import pandas as pd
 
-st.header("Patient's Data History")
+
+st.markdown("""
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    """, unsafe_allow_html=True)
+
+
+st.markdown("""
+    <h1 style='text-align:  center; color: black;'>📝 Patients's Data History </h1>
+    """, unsafe_allow_html=True)
 
 try:
     # Attempt to read the history CSV file
     history = pd.read_csv('history.csv')
 
-    # Display the data in a table
-    st.write("Here is the patient's data history:")
-
     # Iterate through each row in the dataframe
     for i, row in history.iterrows():
-        st.write(f"Patient {i+1}")
+        st.write(f"Patient {i+1}")  
         st.write(row.to_frame().T)
         if st.button(f"Select Patient {i+1} for Diagnosis", key=f"button_{i}"):
             frame = row.to_frame().T  # Convert the row to a DataFrame
