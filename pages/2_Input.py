@@ -75,21 +75,18 @@ if submit_button:
     data.replace({'\t?': np.nan, '?': np.nan, '-': np.nan}, inplace=True)
 
 
-
-    new_data = pd.DataFrame(frame)
-
     
     try:
         history = pd.read_csv('history.csv')
-        history = pd.concat([history, new_data], ignore_index=True)
+        history = pd.concat([history, data], ignore_index=True)
     except FileNotFoundError:
-        history = new_data
+        history = data
 
     
     history.to_csv('history.csv', index=False)
 
     
-    st.session_state["new_data"] = pd.DataFrame(frame)
+    st.session_state["new_data"] = data
 
    
     st.switch_page("pages/3_Check Result.py")

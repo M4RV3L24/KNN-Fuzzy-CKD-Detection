@@ -110,6 +110,8 @@ col2.write(f'Accuracy: {accuracy}')
 data['gfr'] = data.apply(f.calculate_gfr, axis=1)
 data['bun'] = data.apply(f.calculate_bun, axis=1)
 
+st.write(data)
+
 y_pred = knn_best.predict(data)
 y_pred_probabilities = knn_best.predict_proba(data)
 
