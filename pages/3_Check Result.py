@@ -122,6 +122,8 @@ col2.write(f'Accuracy: {accuracy}')
 data['gfr'] = data.apply(f.calculate_gfr, axis=1)
 data['bun'] = data.apply(f.calculate_bun, axis=1)
 
+st.write(data)
+
 y_pred = knn_best.predict(data)
 y_pred_probabilities = knn_best.predict_proba(data)
 
@@ -147,6 +149,18 @@ severity_member = f.severity_member(fuzzy_universe["severity"])
 
 simulation = f.create_fuzzy_rules(gfr_member, creatinine_member, bun_member, albuminuria_member, bp_member, 
                                   hemoglobin_member, sodium_member, potassium_member, severity_member)
+
+
+
+simulation.input['gfr'] = data["gfr"]
+simulation.input['creatinine'] = data["sc"]
+simulation.input['bun'] = data["bun"]
+simulation.input['albuminuria'] = data["al"]  
+simulation.input['bp'] = data["bp"]  
+simulation.input['hemoglobin'] = data["hemo"]  
+simulation.input['sodium'] = data["sod"]  
+simulation.input['potassium'] = data["pot"]  
+
 
 
 
