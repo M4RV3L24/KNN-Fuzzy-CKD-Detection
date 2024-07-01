@@ -40,7 +40,7 @@ if submit_button:
 
 
         
-    # # List of required keys
+    # List of required keys
     # required_keys = ['age', 'sc', 'bu', 'al', 'bp', 'hemo', 'sod', 'pot']
 
     # # Check if any required key has a None value

@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import os
 import joblib
-
+import matplotlib.pyplot as plt
 # st.header("Patient's Diagnosis")
 st.subheader("+ Patient's Data")
 
@@ -78,7 +78,7 @@ file_path = 'dataset/kidney_disease.csv'
 features, target, preprocessor = f.load_and_preprocess_data(file_path)
 
 # Split the data
-x_train, x_test, y_train, y_test = f.train_test_split(features, target, test_size=0.2, stratify=target)
+x_train, x_test, y_train, y_test = f.train_test_split(features, target, test_size=0.2, stratify=target, random_state=42)
 
 # Train the KNN model
 if os.path.exists(model_path) and os.path.exists(params_path):
@@ -148,6 +148,28 @@ simulation.input['bp'] = data["bp"]
 simulation.input['hemoglobin'] = data["hemo"]  
 simulation.input['sodium'] = data["sod"]  
 simulation.input['potassium'] = data["pot"]  
+
+# Compute the result
+simulation.compute()
+
+# Print the severity level
+st.write(f"Severity level: {simulation.output['severity']:.2f}")
+
+# Visualize the severity graph
+
+# # Save the severity graph to a file
+# plt.savefig('severity_graph.png')
+# print("Severity graph saved as 'severity_graph.png'")
+
+# image = Image.open('severity_graph.png')
+# image.show()
+
+# Visualize the final aggregated result
+fig, ax0 = plt.subplots(figsize=(8, 3))
+
+severity_member.view(sim=simulation, ax=ax0)
+st.pyplot(fig)
+
 
 
 
