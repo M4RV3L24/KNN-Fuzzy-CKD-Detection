@@ -119,20 +119,124 @@ else:
     st.text("The patient is not diagnosed with Chronic Kidney Disease.")
 
 
+def print_chart(name,key,min,max,step,list_options=["low", "normal", "high"]):
+    col1,col2 = st.columns([3,2])
+    index_values =  st.session_state.get(key, {})
 
+    with col1:
+        expander = st.expander(f"{name} Advanced Settings")
+        # option
+        option_key = f"{name}_option"
+        option = expander.selectbox(
+            "Which one to change",
+            (list_options), key=option_key)
+        
+        
+        # print berdasarkan option dan jumlah index_values
+        if option in index_values:
+            if len(index_values[option]) == 3:
+                a1, a2, a3 = index_values[option]
+                a4 = None
+            elif len(index_values[option]) == 4:
+                a1, a2, a3, a4 = index_values[option]
+        else:
+            a1, a2, a3, a4 = 0.0, 0.0, 0.0, 0.0
+
+
+        new_a1 = expander.slider(f"{name}1", min_value=min, max_value=max, value=a1, step=step)
+        new_a2 = expander.slider(f"{name}2", min_value=min, max_value=max, value=a2, step=step)
+        new_a3 = expander.slider(f"{name}3", min_value=min, max_value=max, value=a3, step=step)
+        if a4 is not None:
+            new_a4 = expander.slider(f"{name}4", min_value=min, max_value=max, value=a4, step=step)
+        else:
+            new_a4 = None
+
+        # Validation logic
+        if new_a2 < new_a1:
+            st.warning(f"Value '{name}2' must be greater than '{name}1'. Adjusting values...")
+            new_a2 = new_a1
+
+        if new_a3 < new_a2:
+            st.warning(f"Value '{name}3' must be greater than '{name}2'. Adjusting values...")
+            new_a3 = new_a2
+
+        if new_a4 is not None and new_a4 < new_a3:
+            st.warning(f"Value '{name}4' must be greater than '{name}3'. Adjusting values...")
+            new_a4 = new_a3
+
+        if new_a4 is not None:
+            st.session_state[f'{name}_values'][option] = [new_a1, new_a2, new_a3, new_a4]
+        else:
+            st.session_state[f'{name}_values'][option] = [new_a1, new_a2, new_a3]
+        
+    with col2: 
+        function_name = f"{name}_member"
+        try:
+            # Get the function reference from module f
+            member_function = getattr(f, function_name)
+            
+            # Call the function and return its result
+            result = member_function(fuzzy_universe[name], index_values)
+            return result
+        except AttributeError:
+            st.error(f"Function {function_name} does not exist in module f.")
+            return None
+        
 #fuzzy
 
 fuzzy_universe = f.fuzzy_init()
-gfr_member = f.gfr_member(fuzzy_universe["gfr"])
-bun_member = f.bun_member(fuzzy_universe["bun"])
-creatinine_member = f.creatinine_member(fuzzy_universe["creatinine"])
-hemoglobin_member = f.hemoglobin_member(fuzzy_universe["hemoglobin"])
-bp_member = f.bp_member(fuzzy_universe["bp"])
-albuminuria_member = f.albuminuria_member(fuzzy_universe["albuminuria"])
-sodium_member = f.sodium_member(fuzzy_universe["sodium"])
-potassium_member = f.potassium_member(fuzzy_universe["potassium"])
-severity_member = f.severity_member(fuzzy_universe["severity"])
+# gfr_member = f.gfr_member(fuzzy_universe["gfr"])
+# bun_member = f.bun_member(fuzzy_universe["bun"])
+# creatinine_member = f.creatinine_member(fuzzy_universe["creatinine"])
+# hemoglobin_member = f.hemoglobin_member(fuzzy_universe["hemoglobin"])
+# bp_member = f.bp_member(fuzzy_universe["bp"])
+# albuminuria_member = f.albuminuria_member(fuzzy_universe["albuminuria"])
+# sodium_member = f.sodium_member(fuzzy_universe["sodium"])
+# potassium_member = f.potassium_member(fuzzy_universe["potassium"])
 
+gfr_member = print_chart(name="gfr",key="gfr_values",min=0.0,max=200.0,step=1.0,list_options=["stage 1", "stage 2", "stage 3", "stage 4", "stage 5"])
+bun_member = print_chart(name="bun",key="bun_values",min=0.0,max=100.0,step=1.0,list_options=["very low", "low", "medium", "high", "very high"])
+creatinine_member = print_chart(name="creatinine",key="creatinine_values",min=0.0,max=10.0,step=0.1,list_options=["very low", "low", "medium", "high", "very high"])
+hemoglobin_member = print_chart(name="hemoglobin",key="hemoglobin_values",min=5.0,max=20.0,step=0.1)
+bp_member = print_chart(name="bp",key="bp_values",min=50.0,max=200.0,step=1.0,list_options=["normal", "high", "very high"])
+albuminuria_member = print_chart(name="albuminuria",key="albuminuria_values",min=0.0,max=6.0,step=1.0,list_options=["normal", "trace", "low", "medium", "high", "very high"])
+sodium_member = print_chart(name="sodium",key="sodium_values",min=120.0,max=150.0,step=0.1)
+potassium_member = print_chart(name="potassium",key="potassium_values",min=2.0,max=7.0,step=0.1)
+def severity_chart():
+    col1,col2 = st.columns([3,2])
+    severity_values = st.session_state['severity_values']
+
+    with col1:
+        expander = st.expander("Severe Advanced Settings")
+        # option
+        option = expander.selectbox(
+            "Which one to change",
+            ("low", "medium", "high"))
+        
+        if option in severity_values:
+            a1, a2, a3 = severity_values[option]
+        else:
+            a1, a2, a3 = 0.0, 0.0, 0.0  # Default values if not initialized
+
+        new_a1 = expander.slider("severe1", min_value=0.0, max_value=1.1, value=a1, step=0.1)
+        new_a2 = expander.slider("severe2", min_value=0.0, max_value=1.1, value=a2, step=0.1)
+        new_a3 = expander.slider("severe3", min_value=0.0, max_value=1.1, value=a3, step=0.1)
+
+        # Validation logic
+        if new_a2 < new_a1:
+            st.warning("Value 'severe2' must be greater than 'severe1'. Adjusting values...")
+            new_a2 = new_a1  # Adjusting a2 to be greater than a1
+
+        if new_a3 < new_a2:
+            st.warning("Value 'severe3' must be greater than 'severe2'. Adjusting values...")
+            new_a3 = new_a2   # Adjusting a3 to be greater than a2
+        
+        st.session_state['severity_values'][option] = [new_a1, new_a2, new_a3]
+    with col2:
+        severity_member = f.severity_member(fuzzy_universe["severity"], st.session_state['severity_values'])
+    return severity_member
+
+severity_member = severity_chart()
 simulation = f.create_fuzzy_rules(gfr_member, creatinine_member, bun_member, albuminuria_member, bp_member, 
                                   hemoglobin_member, sodium_member, potassium_member, severity_member)
 
