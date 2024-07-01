@@ -27,7 +27,7 @@ def display_table(dataframe, page, items_per_page):
     
 
 st.markdown("""
-    <h1 style='text-align:  center; color: black;'>Chronic Kidney Disease Analyzer </h1>
+    <h1 style='text-align:  center; '>Chronic Kidney Disease Analyzer </h1>
     """, unsafe_allow_html=True)
 
 

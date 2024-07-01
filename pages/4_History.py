@@ -9,7 +9,7 @@ st.markdown("""
 
 
 st.markdown("""
-    <h1 style='text-align:  center; color: black;'>📝 Patients's Data History </h1>
+    <h1 style='text-align:  center; '>📝 Patients's Data History </h1>
     """, unsafe_allow_html=True)
 
 # Function to delete a specific row in the history file

@@ -35,7 +35,7 @@ def calculate_bun(row):
 
 def load_and_preprocess_data (filepath):
 
-        # Load dataset
+    # Load dataset
     data = pd.read_csv(filepath)
     # Encode target labels
 

@@ -9,9 +9,12 @@ st.markdown("""
 
 
 st.markdown("""
-    <h1 style='text-align: center; color: black;'>👤Patient's Data </h1>
+    <h1 style='text-align: center; '>👤Patient's Data </h1>
     """, unsafe_allow_html=True)
-patient_form = st.form('new_input')
+
+
+st.warning("Please enter all the required values to proceed with the simulation.")
+patient_form = st.form('new_input', border=True)
 
 with patient_form:
     age = st.number_input("Age", min_value=0)
@@ -43,17 +46,6 @@ with patient_form:
 
 
 if submit_button:
-
-
-        
-    # List of required keys
-    # required_keys = ['age', 'sc', 'bu', 'al', 'bp', 'hemo', 'sod', 'pot']
-
-    # # Check if any required key has a None value
-    # for key in required_keys:
-    #     if data.get(key) is None:
-    #         st.write("Please enter all the required values to proceed with the simulation.")
-    #         raise ValueError(f"The value for {key} cannot be None.")
 
     
     frame = {

@@ -15,60 +15,8 @@ st.markdown("""
 
 # st.header("Patient's Diagnosis")
 st.markdown("""
-    <h2 style='text-align: center; color: black;'>👤Patient's Data </h1>
+    <h2 style='text-align: center; '>👤Patient's Data </h1>
     """, unsafe_allow_html=True)
-
-
-age = st.sidebar.expander("Age (age)")
-age.write("The age of the patient in years.")
-bp = st.sidebar.expander("Blood Pressure (bp)")
-bp.write("The patient's blood pressure, typically measured in mmHg.")
-sg = st.sidebar.expander("Specific Gravity (sg)")
-sg.write("A measure of the concentration of solutes in the urine.")
-al = st.sidebar.expander("Albumin (al)")
-al.write("The presence of albumin in the urine, an indicator of kidney function.")
-su = st.sidebar.expander("Sugar (su)")
-su.write("The presence of sugar in the urine, an indicator of diabetes.")
-rbc = st.sidebar.expander("Red Blood Cells (rbc)")
-rbc.write("The count of red blood cells in the urine.")
-pc = st.sidebar.expander("Pus Cell (pc)")
-pc.write("The count of pus cells in the urine, indicating infection.")
-pcc = st.sidebar.expander("Pus Cell Clumps (pcc)")
-pcc.write("The presence of clumps of pus cells in the urine.")
-ba = st.sidebar.expander("Bacteria (ba)")
-ba.write("The presence of bacteria in the urine.")
-bgr = st.sidebar.expander("Blood Glucose Random (bgr)")
-bgr.write("Random blood glucose level.")
-bu = st.sidebar.expander("Blood Urea (bu)")
-bu.write("The level of urea in the blood, an indicator of kidney function.")
-sc = st.sidebar.expander("Serum Creatinine (sc)")
-sc.write("The level of creatinine in the blood, an indicator of kidney function.")
-sod = st.sidebar.expander("Sodium (sod)")
-sod.write("The level of sodium in the blood.")
-pot = st.sidebar.expander("Potassium (pot)")
-pot.write("The level of potassium in the blood.")
-hemo = st.sidebar.expander("Hemoglobin (hemo)")
-hemo.write("The level of hemoglobin in the blood.")
-pcv = st.sidebar.expander("Packed Cell Volume (pcv)")
-pcv.write("The volume percentage of red blood cells in blood.")
-wc = st.sidebar.expander("White Blood Cell Count (wc)")
-wc.write("The count of white blood cells in the blood.")
-rc = st.sidebar.expander("Red Blood Cell Count (rc)")
-rc.write("The count of red blood cells in the blood.")
-htn = st.sidebar.expander("Hypertension (htn)")
-htn.write("Indicates if the patient has hypertension.")
-dm = st.sidebar.expander("Diabetes Mellitus (dm)")
-dm.write("Indicates if the patient has diabetes.")
-cad = st.sidebar.expander("Coronary Artery Disease (cad)")
-cad.write("Indicates if the patient has coronary artery disease.")
-appet = st.sidebar.expander("Appetite (appet)")
-appet.write("The patient's appetite.")
-pe = st.sidebar.expander("Pedal Edema (pe)")
-pe.write("Indicates if the patient has pedal edema.")
-ane = st.sidebar.expander("Anemia (ane)")
-ane.write("Indicates if the patient has anemia.")
-classification = st.sidebar.expander("Classification (classification)")
-classification.write("The classification of the patient's condition.")
 
 
 if "new_data" in st.session_state:
@@ -79,7 +27,7 @@ else:
 st.table(data)
 
 st.markdown("""
-    <h2 style='text-align: center; color: black;'>📊 Prediction </h1>
+    <h2 style='text-align: center; '>📊 Prediction </h1>
     """, unsafe_allow_html=True)
 
 # Define the paths for the model and parameters
@@ -270,9 +218,6 @@ simulation.input['potassium'] = data["pot"]
 # Compute the result
 simulation.compute()
 
-# Print the severity level
-st.write(f"Severity level: {simulation.output['severity']:.2f}")
-
 # Visualize the severity graph
 
 severity_member.view(sim=simulation)
@@ -281,8 +226,73 @@ severity_member.view(sim=simulation)
 plt.savefig('severity_graph.png')
 print("Severity graph saved as 'severity_graph.png'")
 
-st.image('severity_graph.png', caption='Kidney Severity')
+@st.experimental_dialog("Patient Severity Level")
+def showResult():
+    st.image('severity_graph.png', caption='Kidney Severity')
+    st.text(f"severity level: {simulation.output['severity']:.2f}")
 
+
+# if st.button("show plot"):
+#     showResult()
+
+if st.sidebar.button("Severity Result", use_container_width=True, type="primary"):
+    showResult()
+
+
+
+age = st.sidebar.expander("Age (age)")
+age.write("The age of the patient in years.")
+bp = st.sidebar.expander("Blood Pressure (bp)")
+bp.write("The patient's blood pressure, typically measured in mmHg.")
+sg = st.sidebar.expander("Specific Gravity (sg)")
+sg.write("A measure of the concentration of solutes in the urine.")
+al = st.sidebar.expander("Albumin (al)")
+al.write("The presence of albumin in the urine, an indicator of kidney function.")
+su = st.sidebar.expander("Sugar (su)")
+su.write("The presence of sugar in the urine, an indicator of diabetes.")
+rbc = st.sidebar.expander("Red Blood Cells (rbc)")
+rbc.write("The count of red blood cells in the urine.")
+pc = st.sidebar.expander("Pus Cell (pc)")
+pc.write("The count of pus cells in the urine, indicating infection.")
+pcc = st.sidebar.expander("Pus Cell Clumps (pcc)")
+pcc.write("The presence of clumps of pus cells in the urine.")
+ba = st.sidebar.expander("Bacteria (ba)")
+ba.write("The presence of bacteria in the urine.")
+bgr = st.sidebar.expander("Blood Glucose Random (bgr)")
+bgr.write("Random blood glucose level.")
+bu = st.sidebar.expander("Blood Urea (bu)")
+bu.write("The level of urea in the blood, an indicator of kidney function.")
+sc = st.sidebar.expander("Serum Creatinine (sc)")
+sc.write("The level of creatinine in the blood, an indicator of kidney function.")
+sod = st.sidebar.expander("Sodium (sod)")
+sod.write("The level of sodium in the blood.")
+pot = st.sidebar.expander("Potassium (pot)")
+pot.write("The level of potassium in the blood.")
+hemo = st.sidebar.expander("Hemoglobin (hemo)")
+hemo.write("The level of hemoglobin in the blood.")
+pcv = st.sidebar.expander("Packed Cell Volume (pcv)")
+pcv.write("The volume percentage of red blood cells in blood.")
+wc = st.sidebar.expander("White Blood Cell Count (wc)")
+wc.write("The count of white blood cells in the blood.")
+rc = st.sidebar.expander("Red Blood Cell Count (rc)")
+rc.write("The count of red blood cells in the blood.")
+htn = st.sidebar.expander("Hypertension (htn)")
+htn.write("Indicates if the patient has hypertension.")
+dm = st.sidebar.expander("Diabetes Mellitus (dm)")
+dm.write("Indicates if the patient has diabetes.")
+cad = st.sidebar.expander("Coronary Artery Disease (cad)")
+cad.write("Indicates if the patient has coronary artery disease.")
+appet = st.sidebar.expander("Appetite (appet)")
+appet.write("The patient's appetite.")
+pe = st.sidebar.expander("Pedal Edema (pe)")
+pe.write("Indicates if the patient has pedal edema.")
+ane = st.sidebar.expander("Anemia (ane)")
+ane.write("Indicates if the patient has anemia.")
+classification = st.sidebar.expander("Classification (classification)")
+classification.write("The classification of the patient's condition.")
+
+
+    
 
 
 
