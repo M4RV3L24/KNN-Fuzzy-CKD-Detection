@@ -69,6 +69,10 @@ if submit_button:
         if key != 'al' and key != 'su':
             if frame[key][0] == 0:
                 frame[key] = [np.nan]
+    data = pd.DataFrame(frame)
+    
+    # Convert non-numeric placeholders to NaN
+    data.replace({'\t?': np.nan, '?': np.nan, '-': np.nan}, inplace=True)
 
 
 

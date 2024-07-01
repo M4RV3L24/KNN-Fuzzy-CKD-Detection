@@ -175,24 +175,15 @@ def gfr_member(gfr, value=None, shape="triangle"):
     # Stage 5: eGFR < 15 mL/min/1.73 m²
     gfr['stage 5'] = fuzz.trimf(gfr.universe, stage5)
 
+    data = {"eGFR": gfr.universe}
+    for key, mf in gfr.terms.items():
+        data[key] = mf.mf
+
+    df = pd.DataFrame(data)
+    st.line_chart(df, x="eGFR", y=["stage 1", "stage 2", "stage 3", "stage 4", "stage 5"], 
+                  x_label= "eGFR (mL/min/1.73 m²)", y_label="Membership Degree")
+
     return gfr
-
-
-
-    # # Stage 1: eGFR > 90 mL/min/1.73 m²
-    # gfr['stage 1'] = fuzz.trimf(gfr.universe, [90, 120, 200])
-
-    # # Stage 2: 60 < eGFR < 89 mL/min/1.73 m²
-    # gfr['stage 2'] = fuzz.trimf(gfr.universe, [40, 75, 110])
-
-    # # Stage 3: 30 < eGFR < 59 mL/min/1.73 m²
-    # gfr['stage 3'] = fuzz.trimf(gfr.universe, [10, 45, 80])
-
-    # # Stage 4: 15 < eGFR < 29 mL/min/1.73 m²
-    # gfr['stage 4'] = fuzz.trimf(gfr.universe, [0, 22, 40])
-
-    # # Stage 5: eGFR < 15 mL/min/1.73 m²
-    # gfr['stage 5'] = fuzz.trimf(gfr.universe, [0, 0, 20])
 
 
     # # Membership functions for Serum Creatinine
@@ -219,6 +210,15 @@ def creatinine_member(creatinine, value=None, shape="triangle"):
 
     # High: > 2.0 mg/dL
     creatinine['high'] = fuzz.trapmf(creatinine.universe, high)
+
+    data = {"creatinine": creatinine.universe}
+    for key, mf in creatinine.terms.items():
+        data[key] = mf.mf
+
+    df = pd.DataFrame(data)
+    st.line_chart(df, x="creatinine", y=["low", "normal", "medium", "high"], 
+                  x_label= "SCr (mg/dl)", y_label="Membership Degree")
+
 
     return creatinine
 
@@ -252,6 +252,14 @@ def bun_member(bun, value=None, shape="triangle"):
     # Severely elevated BUN levels
     bun['very high'] = fuzz.trapmf(bun.universe, very_high)
 
+    data = {"bun": bun.universe}
+    for key, mf in bun.terms.items():
+        data[key] = mf.mf
+
+    df = pd.DataFrame(data)
+    st.line_chart(df, x="bun", y=["very low","low", "medium", "high", "very high"], 
+                  x_label= "bun (mg/dl)", y_label="Membership Degree")
+
     return bun
 
     # # https://athenslab.gr/en/diagnostikes-exetaseis/blood-urea-nitrogen-13
@@ -281,6 +289,14 @@ def albuminuria_member(albuminuria, value=None, shape="triangle"):
     albuminuria['high'] = fuzz.trimf(albuminuria.universe, high)           # > 3000 mg/g
     albuminuria['very high'] = fuzz.trimf(albuminuria.universe, very_high)      # > 3000 mg/g
 
+
+    data = {"albuminuria": albuminuria.universe}
+    for key, mf in albuminuria.terms.items():
+        data[key] = mf.mf
+    
+    df = pd.DataFrame(data)
+    st.line_chart(df, x="albuminuria", y=["normal", "trace", "low", "medium", "high", "very high"], 
+                x_label= "Albuminuria (mg/g)", y_label="Membership Degree")
     return albuminuria
 
 def bp_member(bp, value=None, shape="triangle"):
@@ -298,6 +314,15 @@ def bp_member(bp, value=None, shape="triangle"):
     bp['normal'] = fuzz.trapmf(bp.universe, normal)     # < 120/80 mmHg
     bp['high'] = fuzz.trimf(bp.universe, high)          # 120/80 - 139/89 mmHg
     bp['very_high'] = fuzz.trapmf(bp.universe, very_high) # ≥ 140/90 mmHg
+
+    data = {"bp": bp.universe}
+    for key, mf in bp.terms.items():
+        data[key] = mf.mf
+    
+    df = pd.DataFrame(data)
+    st.line_chart(df, x="bp", y=["normal", "high", "very_high"], 
+                x_label= "Blood Pressure (mmHg)", y_label="Membership Degree")
+
     return bp
 
 def hemoglobin_member(hemoglobin, value=None, shape="triangle"):
@@ -315,6 +340,15 @@ def hemoglobin_member(hemoglobin, value=None, shape="triangle"):
     hemoglobin['low'] = fuzz.trapmf(hemoglobin.universe, low)       # < 12 g/dL for women, < 13 g/dL for men
     hemoglobin['normal'] = fuzz.trimf(hemoglobin.universe, normal)  # 12 - 15.5 g/dL for women, 13 - 17.5 g/dL for men
     hemoglobin['high'] = fuzz.trapmf(hemoglobin.universe, high)  # > 15.5 g/dL for women, > 17.5 g/dL for men
+
+    data = {"hemoglobin": hemoglobin.universe}
+    for key, mf in hemoglobin.terms.items():
+        data[key] = mf.mf
+    
+    df = pd.DataFrame(data)
+    st.line_chart(df, x="hemoglobin", y=["low", "normal", "high"], 
+                x_label= "Hemoglobin (g/dL)", y_label="Membership Degree")
+
     return hemoglobin
 
 
@@ -332,6 +366,15 @@ def sodium_member(sodium, value=None, shape="triangle"):
     sodium['low'] = fuzz.trapmf(sodium.universe, low)   # < 135 mEq/L
     sodium['normal'] = fuzz.trimf(sodium.universe, normal)        # 135 - 145 mEq/L
     sodium['high'] = fuzz.trapmf(sodium.universe, high)  # > 145 mEq/L
+
+    
+    data = {"sodium": sodium.universe}
+    for key, mf in sodium.terms.items():
+        data[key] = mf.mf
+    
+    df = pd.DataFrame(data)
+    st.line_chart(df, x="sodium", y=["low", "normal", "high"], 
+                x_label= "Sodium (mEq/L)", y_label="Membership Degree")
     return sodium
 
 def potassium_member(potassium, value=None, shape="triangle"):
@@ -349,6 +392,15 @@ def potassium_member(potassium, value=None, shape="triangle"):
     potassium['low'] = fuzz.trapmf(potassium.universe, low)    # < 3.5 mEq/L
     potassium['normal'] = fuzz.trimf(potassium.universe, normal)     # 3.5 - 5.0 mEq/L
     potassium['high'] = fuzz.trapmf(potassium.universe, high)     # > 5.0 mEq/L
+
+    data = {"potassium": potassium.universe}
+    for key, mf in potassium.terms.items():
+        data[key] = mf.mf
+    
+    df = pd.DataFrame(data)
+    st.line_chart(df, x="potassium", y=["low", "normal", "high"],
+                x_label= "Potassium (mEq/L)", y_label="Membership Degree")
+
     return potassium
 
 def severity_member(severity, value=None, shape="triangle"):
@@ -366,6 +418,14 @@ def severity_member(severity, value=None, shape="triangle"):
     severity['low'] = fuzz.trimf(severity.universe, low)
     severity['medium'] = fuzz.trimf(severity.universe, medium)
     severity['high'] = fuzz.trimf(severity.universe, high)
+
+    data = {"severity": severity.universe}
+    for key, mf in severity.terms.items():
+        data[key] = mf.mf
+    
+    df = pd.DataFrame(data)
+    st.line_chart(df, x="severity", y=["low", "medium", "high"],
+                x_label= "Severity", y_label="Membership Degree")
     return severity
 
 def create_fuzzy_rules(gfr, creatinine, bun, albuminuria, bp, hemoglobin, sodium, potassium, severity):
