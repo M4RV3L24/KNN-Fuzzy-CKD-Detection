@@ -140,4 +140,16 @@ simulation = f.create_fuzzy_rules(gfr_member, creatinine_member, bun_member, alb
 
 
 
+simulation.input['gfr'] = data["gfr"]
+simulation.input['creatinine'] = data["sc"]
+simulation.input['bun'] = data["bun"]
+simulation.input['albuminuria'] = data["al"]  
+simulation.input['bp'] = data["bp"]  
+simulation.input['hemoglobin'] = data["hemo"]  
+simulation.input['sodium'] = data["sod"]  
+simulation.input['potassium'] = data["pot"]  
+
+
+
+
 

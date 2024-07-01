@@ -37,6 +37,18 @@ with patient_form:
 
 
 if submit_button:
+
+
+        
+    # # List of required keys
+    # required_keys = ['age', 'sc', 'bu', 'al', 'bp', 'hemo', 'sod', 'pot']
+
+    # # Check if any required key has a None value
+    # for key in required_keys:
+    #     if data.get(key) is None:
+    #         st.write("Please enter all the required values to proceed with the simulation.")
+    #         raise ValueError(f"The value for {key} cannot be None.")
+
     
     frame = {
         'age': [age],
