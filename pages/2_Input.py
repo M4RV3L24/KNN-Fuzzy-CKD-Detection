@@ -46,7 +46,7 @@ if submit_button:
 
 
         
-    # # List of required keys
+    # List of required keys
     # required_keys = ['age', 'sc', 'bu', 'al', 'bp', 'hemo', 'sod', 'pot']
 
     # # Check if any required key has a None value
@@ -82,6 +82,74 @@ if submit_button:
         'pe': [pe],
         'ane': [ane], 
     }
+
+    # gfr
+    st.session_state['gfr_values'] = {
+            "stage 1": [90.0, 120.0, 200.0],
+            "stage 2": [40.0, 75.0, 110.0],
+            "stage 3": [10.0, 45.0, 80.0],
+            "stage 4": [0.0, 22.0, 40.0],
+            "stage 5": [0.0, 0.0, 20.0]
+    }
+
+    # bun
+    st.session_state['bun_values'] = {
+            "very low": [0.0, 0.0, 4.0, 10.0],
+            "low": [5.0, 15.0, 25.0],
+            "medium": [20.0, 30.0, 40.0],
+            "high": [35.0, 50.0, 65.0],
+            "very high": [60.0, 80.0, 100.0, 100.0]
+    }
+
+    # creatinine
+    st.session_state['creatinine_values'] = {
+            "low": [0.0, 0.0, 0.7],
+            "normal": [0.6 , 0.9, 1.5],
+            "medium": [1.3, 1.7, 2.3],
+            "high": [2.0, 3.0, 5.0, 5.0]
+    }
+    # hemoglobin
+    st.session_state['hemoglobin_values'] = {
+            "low": [5.0, 5.0, 10.0, 13.0],
+            "normal": [11.0, 13.75, 16.5],
+            "high": [14.5, 17.0, 20.0, 20.0]
+    }
+
+    st.session_state['bp_values'] = {
+            "normal": [50.0, 50.0, 90.0, 135.0],
+            "high": [105.0, 130.0, 155.0],
+            "very high": [125.0, 160.0, 200.0, 200.0]
+    }
+
+    st.session_state['albuminuria_values'] = {
+            "normal": [0.0, 0.0, 1.0],
+            "trace": [0.0, 1.0, 2.0],
+            "low": [1.0, 2.0, 3.0],
+            "medium": [2.0, 3.0, 4.0],
+            "high": [3.0, 4.0, 5.0],
+            "very high": [4.0, 5.0, 5.0]
+    }
+
+
+    st.session_state['sodium_values'] = {
+        "low": [120.0, 120.0, 132.5, 137.0],
+        "normal": [133.0, 140.0, 147.0],
+        "high": [145.0, 145.5, 150.0, 150.0]
+    }
+
+    st.session_state['potassium_values'] = {
+        "low": [2.0, 2.0, 3.25, 5.0],
+        "normal": [3.0, 4.25, 5.5],
+        "high": [4.5, 5.25, 7.0, 7.0]
+    }
+
+    st.session_state['severity_values'] = {
+        "low": [0.0, 0.0, 0.5],
+        "medium": [0.0, 0.5, 1.0],
+        "high": [0.5, 1.0, 1.0]
+    }
+
+    st.session_state
 
     for key in frame:
         if key != 'al' and key != 'su':
