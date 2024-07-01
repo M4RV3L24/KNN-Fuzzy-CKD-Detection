@@ -71,8 +71,23 @@ if submit_button:
                 frame[key] = [np.nan]
 
 
+
+    new_data = pd.DataFrame(frame)
+
+    
+    try:
+        history = pd.read_csv('history.csv')
+        history = pd.concat([history, new_data], ignore_index=True)
+    except FileNotFoundError:
+        history = new_data
+
+    
+    history.to_csv('history.csv', index=False)
+
+    
     st.session_state["new_data"] = pd.DataFrame(frame)
-    #navigate to other page
+
+   
     st.switch_page("pages/3_Check Result.py")
 
 
