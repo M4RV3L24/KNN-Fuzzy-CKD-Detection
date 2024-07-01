@@ -37,6 +37,18 @@ with patient_form:
 
 
 if submit_button:
+
+
+        
+    # List of required keys
+    # required_keys = ['age', 'sc', 'bu', 'al', 'bp', 'hemo', 'sod', 'pot']
+
+    # # Check if any required key has a None value
+    # for key in required_keys:
+    #     if data.get(key) is None:
+    #         st.write("Please enter all the required values to proceed with the simulation.")
+    #         raise ValueError(f"The value for {key} cannot be None.")
+
     
     frame = {
         'age': [age],
@@ -143,8 +155,20 @@ if submit_button:
     data.replace({'\t?': np.nan, '?': np.nan, '-': np.nan}, inplace=True)
 
 
+    
+    try:
+        history = pd.read_csv('history.csv')
+        history = pd.concat([history, data], ignore_index=True)
+    except FileNotFoundError:
+        history = data
+
+    
+    history.to_csv('history.csv', index=False)
+
+    
     st.session_state["new_data"] = data
-    #navigate to other page
+
+   
     st.switch_page("pages/3_Check Result.py")
 
 

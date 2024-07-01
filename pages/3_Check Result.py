@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import os
 import joblib
-
+import matplotlib.pyplot as plt
 # st.header("Patient's Diagnosis")
 st.subheader("+ Patient's Data")
 
@@ -78,7 +78,7 @@ file_path = 'dataset/kidney_disease.csv'
 features, target, preprocessor = f.load_and_preprocess_data(file_path)
 
 # Split the data
-x_train, x_test, y_train, y_test = f.train_test_split(features, target, test_size=0.2, stratify=target)
+x_train, x_test, y_train, y_test = f.train_test_split(features, target, test_size=0.2, stratify=target, random_state=42)
 
 # Train the KNN model
 if os.path.exists(model_path) and os.path.exists(params_path):
@@ -109,6 +109,8 @@ col2.write(f'Accuracy: {accuracy}')
 
 data['gfr'] = data.apply(f.calculate_gfr, axis=1)
 data['bun'] = data.apply(f.calculate_bun, axis=1)
+
+st.write(data)
 
 y_pred = knn_best.predict(data)
 y_pred_probabilities = knn_best.predict_proba(data)
@@ -239,6 +241,35 @@ def severity_chart():
 severity_member = severity_chart()
 simulation = f.create_fuzzy_rules(gfr_member, creatinine_member, bun_member, albuminuria_member, bp_member, 
                                   hemoglobin_member, sodium_member, potassium_member, severity_member)
+
+
+
+simulation.input['gfr'] = data["gfr"]
+simulation.input['creatinine'] = data["sc"]
+simulation.input['bun'] = data["bun"]
+simulation.input['albuminuria'] = data["al"]  
+simulation.input['bp'] = data["bp"]  
+simulation.input['hemoglobin'] = data["hemo"]  
+simulation.input['sodium'] = data["sod"]  
+simulation.input['potassium'] = data["pot"]  
+
+# Compute the result
+simulation.compute()
+
+# Print the severity level
+st.write(f"Severity level: {simulation.output['severity']:.2f}")
+
+# Visualize the severity graph
+
+severity_member.view(sim=simulation)
+
+# # Save the severity graph to a file
+plt.savefig('severity_graph.png')
+print("Severity graph saved as 'severity_graph.png'")
+
+st.image('severity_graph.png', caption='Kidney Severity')
+
+
 
 
 
