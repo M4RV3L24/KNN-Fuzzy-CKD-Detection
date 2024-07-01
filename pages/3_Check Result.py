@@ -24,7 +24,7 @@ if "new_data" in st.session_state:
 else:
     st.switch_page("pages/2_Input.py")
 
-st.table(data)
+st.write(data)
 
 st.markdown("""
     <h2 style='text-align: center; '>📊 Prediction </h1>
@@ -72,7 +72,6 @@ col2.write(f'Accuracy: {accuracy}')
 data['gfr'] = data.apply(f.calculate_gfr, axis=1)
 data['bun'] = data.apply(f.calculate_bun, axis=1)
 
-st.write(data)
 
 y_pred = knn_best.predict(data)
 y_pred_probabilities = knn_best.predict_proba(data)
@@ -145,6 +144,9 @@ def print_chart(name,key,min,max,step,list_options=["low", "normal", "high"]):
         except AttributeError:
             st.error(f"Function {function_name} does not exist in module f.")
             return None
+        
+
+st.write(data[['gfr', 'sc', 'bun', 'al', 'bp', 'hemo', 'sod', 'pot']])
         
 #fuzzy
 
