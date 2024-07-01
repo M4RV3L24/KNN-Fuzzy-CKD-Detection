@@ -157,18 +157,13 @@ st.write(f"Severity level: {simulation.output['severity']:.2f}")
 
 # Visualize the severity graph
 
+severity_member.view(sim=simulation)
+
 # # Save the severity graph to a file
-# plt.savefig('severity_graph.png')
-# print("Severity graph saved as 'severity_graph.png'")
+plt.savefig('severity_graph.png')
+print("Severity graph saved as 'severity_graph.png'")
 
-# image = Image.open('severity_graph.png')
-# image.show()
-
-# Visualize the final aggregated result
-fig, ax0 = plt.subplots(figsize=(8, 3))
-
-severity_member.view(sim=simulation, ax=ax0)
-st.pyplot(fig)
+st.image('severity_graph.png', caption='Kidney Severity')
 
 
 
