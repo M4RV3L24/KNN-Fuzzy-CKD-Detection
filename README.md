@@ -1,5 +1,4 @@
 ## KNN-Fuzzy-CKD-Detection
-
 Nama Kelompok:
 1. Marvel Wilbert Odelio C14220223
 2. Nicholas Sindoro C14220142
@@ -8,4 +7,5 @@ Nama Kelompok:
 5. Daud Christian C14220206 
 
 ## cara run 
-"streamlit run 1_Overview.py"
+tulis perintah "streamlit run 1_Overview.py" di terminal
+
