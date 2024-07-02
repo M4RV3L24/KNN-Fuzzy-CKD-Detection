@@ -77,7 +77,7 @@ if submit_button:
 
     # gfr
     st.session_state['gfr_values'] = {
-            "stage 1": [90.0, 120.0, 200.0],
+            "stage 1": [90.0, 120.0, 500.0],
             "stage 2": [40.0, 75.0, 110.0],
             "stage 3": [10.0, 45.0, 80.0],
             "stage 4": [0.0, 22.0, 40.0],

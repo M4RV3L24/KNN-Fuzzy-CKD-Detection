@@ -121,7 +121,7 @@ def predict_with_knn(model, new_data):
 
 def fuzzy_init():
     # Define the universe of discourse for each clinical parameter
-    gfr = ctrl.Antecedent(np.arange(0, 150, 1), 'gfr')
+    gfr = ctrl.Antecedent(np.arange(0, 300, 1), 'gfr')
     creatinine = ctrl.Antecedent(np.arange(0, 4, 0.1), 'creatinine')
     bun = ctrl.Antecedent(np.arange(0, 100, 1), 'bun')
     albuminuria = ctrl.Antecedent(np.arange(0, 6, 1), 'albuminuria')
@@ -150,7 +150,7 @@ def gfr_member(gfr, value=None, shape="triangle"):
     # check value is null or not
     if value is None:
         value = {
-            "stage 1": [90, 120, 200],
+            "stage 1": [90, 120, 500],
             "stage 2": [40, 75, 110],
             "stage 3": [10, 45, 80],
             "stage 4": [0, 22, 40],
@@ -441,9 +441,25 @@ def create_fuzzy_rules(gfr, creatinine, bun, albuminuria, bp, hemoglobin, sodium
                     (bun['low'] | albuminuria['low'] | albuminuria['normal']) & bp['normal'] & 
                     (hemoglobin['normal'] | hemoglobin['high']) & sodium['normal'] & 
                     (potassium['low'] | potassium['normal']), severity['low'])
+    rule4 = ctrl.Rule(gfr['stage 1'], severity["low"])
+    rule5 = ctrl.Rule(gfr['stage 2'] | gfr["stage 3"], severity["medium"])
+    rule6 = ctrl.Rule(gfr['stage 4'] | gfr["stage 5"], severity["high"])
+    rule7 = ctrl.Rule(albuminuria['normal'] | albuminuria["trace"], severity["low"])
+    rule8 = ctrl.Rule(albuminuria['low'] | albuminuria["medium"], severity["medium"])
+    rule9 = ctrl.Rule(albuminuria['high'] | albuminuria["very high"], severity["high"])
+    rule10 = ctrl.Rule(bp['normal'], severity["low"])
+    rule11 = ctrl.Rule(bp['high'], severity["medium"])
+    rule12 = ctrl.Rule(bp['very_high'], severity["high"])
+    rule13 = ctrl.Rule(hemoglobin['normal'] | hemoglobin['high'], severity["low"])
+    rule14 = ctrl.Rule(hemoglobin['low'], severity["high"])
+    rule15 = ctrl.Rule(sodium['normal'], severity["low"])
+    rule16 = ctrl.Rule(sodium['low'], severity["high"])
+    rule17 = ctrl.Rule(potassium['normal'] | potassium['low'], severity["low"])
+    rule18 = ctrl.Rule(potassium['high'], severity["high"])
 
     # Create a control system based on the rules
-    ckd_ctrl = ctrl.ControlSystem([rule1, rule2, rule3])
+    ckd_ctrl = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, 
+                                   rule10, rule11, rule12, rule13, rule14, rule15, rule16, rule17, rule18])
     ckd_simulation = ctrl.ControlSystemSimulation(ckd_ctrl)
 
     return ckd_simulation
